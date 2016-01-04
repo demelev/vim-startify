@@ -149,6 +149,13 @@ function! startify#insane_in_the_membrane() abort
   silent! doautocmd <nomodeline> User Startified
 endfunction
 
+" Function: #notify_session_loaded {{{1
+function! startify#notify_session_loaded(session_name)
+  if exists("*g:on_session_loaded")
+    call g:on_session_loaded(a:session_name)
+  endif
+endfunction
+
 " Function: #session_load {{{1
 function! startify#session_load(...) abort
   if !isdirectory(s:session_dir)
@@ -183,6 +190,7 @@ function! startify#session_load(...) abort
     call startify#session_delete_buffers()
     execute 'source '. fnameescape(spath)
     call s:create_last_session_link(spath)
+    call startify#notify_session_loaded(a:1)
   else
     echo 'No such file: '. spath
   endif
